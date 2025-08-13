@@ -8,6 +8,8 @@
 - 支持 JSON 和纯文本两种响应格式
 - 包含地理位置信息（国家、城市、时区）
 - 支持 CORS 跨域请求
+- 提供多种 API 接口满足不同需求
+- 模块化路由设计，易于扩展
 
 ## 安装和部署
 
@@ -35,29 +37,24 @@ npm run dev
 npm run deploy
 ```
 
-## 使用方法
+## API 接口说明
 
-### 获取纯文本格式的 IP
+### 1. 默认接口 `/`
+
+获取完整的 IP 地址和地理位置信息。
 
 ```bash
-# 使用 workers.dev 域名
+# 获取 JSON 格式的详细信息（默认）
 curl https://your-worker-name.your-subdomain.workers.dev
 
-# 使用自定义域名
-curl https://myip.example.com
+# 获取纯文本格式的 IP 地址
+curl https://your-worker-name.your-subdomain.workers.dev?format=text
+
+# 使用 Accept 头获取纯文本
+curl -H "Accept: text/plain" https://your-worker-name.your-subdomain.workers.dev
 ```
 
-### 获取 JSON 格式的详细信息
-
-```bash
-# 使用 workers.dev 域名
-curl -H "Accept: application/json" https://your-worker-name.your-subdomain.workers.dev
-
-# 使用自定义域名
-curl -H "Accept: application/json" https://myip.example.com
-```
-
-响应示例：
+**JSON 响应示例：**
 
 ```json
 {
@@ -70,22 +67,92 @@ curl -H "Accept: application/json" https://myip.example.com
 }
 ```
 
+### 2. 简洁 IP 接口 `/ip`
+
+仅返回客户端 IP 地址，无其他信息。
+
+```bash
+# 获取纯文本格式的 IP 地址
+curl https://your-worker-name.your-subdomain.workers.dev/ip
+```
+
+**响应示例：**
+```
+203.0.113.1
+```
+
+### 3. 详细信息接口 `/verbose`
+
+获取不同来源 IP 的详细地理位置信息对比。
+
+```bash
+# 获取详细的多源 IP 信息
+curl https://your-worker-name.your-subdomain.workers.dev/verbose
+```
+
+**响应示例：**
+
+```json
+{
+  "CF-Connecting-IP": {
+    "ip": "203.0.113.1",
+    "country": "US",
+    "city": "San Francisco",
+    "timezone": "America/Los_Angeles"
+  },
+  "X-Forwarded-For": {
+    "ip": "203.0.113.1",
+    "country": "US",
+    "city": "San Francisco",
+    "timezone": "America/Los_Angeles"
+  },
+  "X-Real-IP": {
+    "ip": "Unknown",
+    "country": "Unknown",
+    "city": "Unknown",
+    "timezone": "Unknown"
+  }
+}
+```
+
+### 4. API 文档接口 `/readme`
+
+获取完整的 API 使用文档。
+
+```bash
+# 获取 API 文档
+curl https://your-worker-name.your-subdomain.workers.dev/readme
+```
+
 ## 项目结构
 
 ```
 myip/
 ├── src/
-│   └── index.js          # Worker 主要代码
+│   ├── index.js          # Worker 入口文件
+│   └── routes/           # 路由模块目录
+│       ├── index.js      # 路由管理器
+│       ├── default.js    # 默认路由处理器
+│       ├── ip.js         # 简洁 IP 路由处理器
+│       ├── verbose.js    # 详细信息路由处理器
+│       └── readme.js     # API 文档路由处理器
 ├── wrangler.jsonc        # Wrangler 配置文件
 ├── package.json          # 项目配置和依赖
-└── README.md            # 项目说明
+├── README.md            # 项目说明
+└── TROUBLESHOOTING.md   # 故障排除指南
 ```
 
 ## 配置说明
 
 - `wrangler.jsonc`: Cloudflare Worker 的配置文件，包含自定义域名绑定
-- `src/index.js`: Worker 的主要逻辑代码
-- Worker 会自动检测请求头中的 `Accept` 字段来决定返回格式
+- `src/index.js`: Worker 的入口文件，负责路由分发
+- `src/routes/`: 模块化路由处理器目录
+  - `index.js`: 路由管理器，统一管理所有路由映射
+  - `default.js`: 默认路由，支持 JSON 和纯文本格式
+  - `ip.js`: 简洁 IP 路由，仅返回 IP 地址
+  - `verbose.js`: 详细信息路由，对比多种 IP 来源
+  - `readme.js`: API 文档路由，提供使用说明
+- Worker 会根据 URL 路径和请求头自动选择合适的响应格式
 
 ### 自定义域名配置
 
@@ -136,10 +203,16 @@ myip/
 nslookup myip.example.com
 
 # 测试本地开发服务器
-curl http://localhost:8787
+curl http://localhost:8787          # 默认接口
+curl http://localhost:8787/ip       # 简洁 IP 接口
+curl http://localhost:8787/verbose  # 详细信息接口
+curl http://localhost:8787/readme   # API 文档接口
 
 # 测试生产环境
 curl https://your-worker-name.your-subdomain.workers.dev
+curl https://your-worker-name.your-subdomain.workers.dev/ip
+curl https://your-worker-name.your-subdomain.workers.dev/verbose
+curl https://your-worker-name.your-subdomain.workers.dev/readme
 ```
 
 ## 注意事项
