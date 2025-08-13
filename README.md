@@ -34,7 +34,13 @@ npm run dev
 ### 4. 部署到 Cloudflare
 
 ```bash
+# 部署到开发环境（默认）
 npm run deploy
+# 或者
+npm run deploy:dev
+
+# 部署到生产环境
+npm run deploy:prod
 ```
 
 ## API 接口说明
@@ -144,7 +150,7 @@ myip/
 
 ## 配置说明
 
-- `wrangler.jsonc`: Cloudflare Worker 的配置文件，包含自定义域名绑定
+- `wrangler.jsonc`: Cloudflare Worker 的配置文件，包含自定义域名绑定和环境配置
 - `src/index.js`: Worker 的入口文件，负责路由分发
 - `src/routes/`: 模块化路由处理器目录
   - `index.js`: 路由管理器，统一管理所有路由映射
@@ -153,6 +159,15 @@ myip/
   - `verbose.js`: 详细信息路由，对比多种 IP 来源
   - `readme.js`: API 文档路由，提供使用说明
 - Worker 会根据 URL 路径和请求头自动选择合适的响应格式
+
+### 环境配置说明
+
+项目支持多环境部署：
+
+- **开发环境**：使用顶级配置，通过 `npm run deploy` 或 `npm run deploy:dev` 部署
+- **生产环境**：使用 `env.production` 配置，通过 `npm run deploy:prod` 部署
+
+两个环境都配置了相同的自定义域名 `myip.sheepx.fun`，你可以根据需要修改配置文件中的域名设置。
 
 ### 自定义域名配置
 
