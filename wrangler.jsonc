@@ -1,0 +1,26 @@
+{
+  "name": "myip-worker",
+  "main": "src/index.js",
+  "compatibility_date": "2023-12-01",
+  
+  // 自定义域名绑定 (Wrangler v3 语法)
+  "routes": [
+    {
+      "pattern": "myip.example.com",
+      "custom_domain": true
+    }
+  ],
+  
+  "env": {
+    "production": {
+      "name": "myip-worker",
+      // 生产环境自定义域名绑定
+      "routes": [
+        {
+          "pattern": "myip.example.com",
+          "custom_domain": true
+        }
+      ]
+    }
+  }
+}

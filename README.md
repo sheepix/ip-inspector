@@ -76,32 +76,43 @@ curl -H "Accept: application/json" https://myip.example.com
 myip/
 ├── src/
 │   └── index.js          # Worker 主要代码
-├── wrangler.toml         # Wrangler 配置文件
+├── wrangler.jsonc        # Wrangler 配置文件
 ├── package.json          # 项目配置和依赖
 └── README.md            # 项目说明
 ```
 
 ## 配置说明
 
-- `wrangler.toml`: Cloudflare Worker 的配置文件，包含自定义域名绑定
+- `wrangler.jsonc`: Cloudflare Worker 的配置文件，包含自定义域名绑定
 - `src/index.js`: Worker 的主要逻辑代码
 - Worker 会自动检测请求头中的 `Accept` 字段来决定返回格式
 
 ### 自定义域名配置
 
-项目支持自定义域名配置，配置位于 `wrangler.toml`：
+项目支持自定义域名配置，配置位于 `wrangler.jsonc`：
 
-```toml
-# 自定义域名绑定
-[[routes]]
-pattern = "myip.example.com/*"
-zone_name = "example.com"
-
-# 生产环境自定义域名绑定
-[[env.production.routes]]
-pattern = "myip.example.com/*"
-zone_name = "example.com"
-```
+```jsonc
+{
+  // 自定义域名绑定 (Wrangler v3 语法)
+  "routes": [
+    {
+      "pattern": "myip.example.com",
+      "custom_domain": true
+    }
+  ],
+  
+  "env": {
+    "production": {
+      // 生产环境自定义域名绑定
+      "routes": [
+        {
+          "pattern": "myip.example.com",
+          "custom_domain": true
+        }
+      ]
+    }
+  }
+}
 
 **域名配置要求：**
 1. 域名 `example.com` 必须已添加到 Cloudflare 账户

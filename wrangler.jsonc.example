@@ -1,0 +1,110 @@
+{
+  // Wrangler 配置文件示例 (JSONC 格式)
+  // 复制此文件为 wrangler.jsonc 并根据你的需求修改配置
+  
+  "name": "your-worker-name",
+  "main": "src/index.js",
+  "compatibility_date": "2023-12-01",
+  
+  // 可选：禁用 workers.dev 子域名
+  // "workers_dev": false,
+  
+  // 自定义域名绑定 (Wrangler v3 语法)
+  // 取消注释并替换为你的域名
+  // "routes": [
+  //   {
+  //     "pattern": "your-domain.com",
+  //     "custom_domain": true
+  //   }
+  // ],
+  
+  // 传统路由配置（如果你有现有的应用服务器）
+  // "routes": [
+  //   {
+  //     "pattern": "your-domain.com/*",
+  //     "zone_name": "your-domain.com"
+  //   }
+  // ],
+  
+  // 环境变量
+  // "vars": {
+  //   "API_KEY": "your-api-key",
+  //   "DEBUG": "false"
+  // },
+  
+  // KV 命名空间绑定
+  // "kv_namespaces": [
+  //   {
+  //     "binding": "MY_KV",
+  //     "id": "your-kv-namespace-id"
+  //   }
+  // ],
+  
+  // D1 数据库绑定
+  // "d1_databases": [
+  //   {
+  //     "binding": "DB",
+  //     "database_name": "your-database",
+  //     "database_id": "your-database-id"
+  //   }
+  // ],
+  
+  // 触发器配置（定时任务）
+  // "triggers": {
+  //   "crons": ["0 0 * * *"]  // 每天午夜执行
+  // },
+  
+  // 自定义构建配置
+  // "build": {
+  //   "command": "npm run build",
+  //   "cwd": "./",
+  //   "watch_dir": "src"
+  // },
+  
+  // 兼容性标志
+  // "compatibility_flags": ["nodejs_compat"],
+  
+  // 账户 ID（可选，也可通过环境变量 CLOUDFLARE_ACCOUNT_ID 设置）
+  // "account_id": "your-account-id",
+  
+  // 环境配置
+  "env": {
+    // 生产环境配置
+    "production": {
+      "name": "your-worker-name-prod",
+      
+      // 生产环境自定义域名绑定
+      // "routes": [
+      //   {
+      //     "pattern": "your-domain.com",
+      //     "custom_domain": true
+      //   }
+      // ],
+      
+      // 生产环境变量
+      // "vars": {
+      //   "API_KEY": "your-production-api-key",
+      //   "DEBUG": "false"
+      // }
+    },
+    
+    // 预览环境配置
+    "staging": {
+      "name": "your-worker-name-staging",
+      
+      // 预览环境自定义域名绑定
+      // "routes": [
+      //   {
+      //     "pattern": "staging.your-domain.com",
+      //     "custom_domain": true
+      //   }
+      // ],
+      
+      // 预览环境变量
+      // "vars": {
+      //   "API_KEY": "your-staging-api-key",
+      //   "DEBUG": "true"
+      // }
+    }
+  }
+}
