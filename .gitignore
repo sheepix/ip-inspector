@@ -90,6 +90,7 @@ logs
 *.log
 
 # Wrangler
+wrangler.jsonc
 .wrangler/
 
 # OS generated files
