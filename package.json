@@ -1,0 +1,22 @@
+{
+  "name": "myip-worker",
+  "version": "1.0.0",
+  "description": "A Cloudflare Worker that returns the client's public IP address",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler preview"
+  },
+  "keywords": [
+    "cloudflare",
+    "worker",
+    "ip",
+    "serverless"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}
